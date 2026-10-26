@@ -188,26 +188,45 @@ p { margin: 0 0 1.1rem; }
 .nav-toggle[aria-expanded="true"] .nav-toggle-bar::before { transform: translateY(7px) rotate(45deg); }
 .nav-toggle[aria-expanded="true"] .nav-toggle-bar::after { transform: translateY(-7px) rotate(-45deg); }
 
-/* Hero */
+/* Hero: the shopfront behind the text, fading to black on the left so the copy stays legible */
 .hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: min(82vh, 760px);
+  padding: clamp(4rem, 9vw, 7rem) 0;
   background: var(--ink);
   color: var(--white);
-  padding: clamp(3.5rem, 8vw, 6.5rem) 0 clamp(4rem, 9vw, 7rem);
   overflow: hidden;
 }
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: clamp(2.5rem, 6vw, 5rem);
-  align-items: center;
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 30%;
 }
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(18,18,18,.94) 0%, rgba(18,18,18,.88) 32%, rgba(18,18,18,.5) 62%, rgba(18,18,18,.15) 100%),
+    linear-gradient(0deg, rgba(18,18,18,.55) 0%, rgba(18,18,18,0) 35%);
+}
+.hero-inner { width: 100%; }
+.hero-copy { max-width: 38rem; }
 .hero h1 { max-width: 13ch; margin-bottom: 1.5rem; }
-.lede { font-size: 1.15rem; color: #d9d3cb; max-width: 34rem; margin-bottom: 2.25rem; }
+.lede { font-size: 1.15rem; color: #e2ddd6; max-width: 34rem; margin-bottom: 2.25rem; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .85rem; }
 .hero-status {
   margin: 1.75rem 0 0;
   font-size: .9rem;
-  color: var(--muted-on-dark);
+  color: #cfc9c1;
   min-height: 1.5em;
 }
 .hero-status::before {
@@ -221,27 +240,6 @@ p { margin: 0 0 1.1rem; }
 }
 .hero-status:empty::before { display: none; }
 .hero-status.is-open::before { background: #6fbf73; }
-
-.hero-media {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  align-items: end;
-}
-.hero-img img { width: 100%; height: 100%; object-fit: cover; }
-.hero-img-main img { object-position: center 75%; }
-.hero-img-main {
-  grid-column: 1 / 9;
-  grid-row: 1;
-  aspect-ratio: 4 / 5;
-}
-.hero-img-side {
-  grid-column: 7 / 13;
-  grid-row: 1;
-  aspect-ratio: 1 / 1;
-  margin-bottom: -2.5rem;
-  border: 6px solid var(--ink);
-}
 
 /* Sections */
 .section { padding: var(--section) 0; }
@@ -316,10 +314,10 @@ p { margin: 0 0 1.1rem; }
 .gallery { background: var(--white); padding-bottom: var(--section); }
 .gallery-inner {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
 }
-.gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.gallery img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 .gallery figcaption {
   margin-top: .8rem;
   font-family: var(--serif);
@@ -398,18 +396,15 @@ address { font-style: normal; margin-bottom: .75rem; }
 }
 .phone:hover { color: var(--red); }
 
-.visit-media { display: flex; flex-direction: column; gap: 1.25rem; }
-.shopfront img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .map {
-  flex: 1;
-  min-height: 260px;
+  min-height: 420px;
   background: var(--line);
 }
 .map iframe {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 260px;
+  min-height: 420px;
   border: 0;
   filter: grayscale(1) contrast(1.05);
 }
@@ -444,10 +439,9 @@ address { font-style: normal; margin-bottom: .75rem; }
 
 /* Responsive */
 @media (max-width: 960px) {
-  .hero-inner,
   .about-inner,
   .visit-inner { grid-template-columns: 1fr; }
-  .hero-media { max-width: 540px; }
+  .gallery-inner { grid-template-columns: 1fr 1fr; }
   .about-img { max-width: 560px; }
   .quotes { grid-template-columns: 1fr; max-width: 40rem; }
 }
@@ -478,9 +472,15 @@ address { font-style: normal; margin-bottom: .75rem; }
 
   .menu-grid { grid-template-columns: 1fr; }
   .menu-col + .menu-col > h3:first-child { margin-top: 2.5rem; }
-  .gallery-inner { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
   .footer-inner { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 760px) {
+  .hero { min-height: 0; padding: 5rem 0 4rem; }
+  .hero::before {
+    background: linear-gradient(0deg, rgba(18,18,18,.95) 0%, rgba(18,18,18,.85) 50%, rgba(18,18,18,.72) 100%);
+  }
 }
 
 @media (max-width: 480px) {
